@@ -28,7 +28,7 @@ public class Conexion {
     public Connection conectar() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/.....", "root", "");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/patrones", "root", "");
         } catch (ClassNotFoundException | SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }

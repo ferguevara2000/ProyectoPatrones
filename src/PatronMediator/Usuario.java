@@ -28,8 +28,8 @@ public abstract class Usuario {
         return nombre;
     }
     
-    public void Enviar(String mensaje, Usuario para){
-        chat.Enviar(mensaje, para, this);
+    public void Enviar(String mensaje, String para){
+        chat.Enviar(mensaje, para, this.getNombre());
     }
     
     public void Recibir(Mensaje msg){

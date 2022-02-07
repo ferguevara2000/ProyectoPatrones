@@ -7,8 +7,8 @@ import java.time.format.DateTimeFormatter;
 public class Mensaje {
     
     private DateTimeFormatter fecha = DateTimeFormatter.ofPattern("hh:mm");
-    public Usuario De;
-    public Usuario Para;
+    public String De;
+    public String Para;
     public String texto;
 
     public Mensaje() {

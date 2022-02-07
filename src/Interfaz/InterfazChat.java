@@ -2,40 +2,66 @@ package Interfaz;
 
 import PatronMediator.Chat;
 import PatronMediator.Chatroom;
-import PatronMediator.Usuario;
-import PatronMediator.Usuario1;
+import PatronSingleton.ListaPersonas;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 
 public class InterfazChat extends javax.swing.JFrame {
 
     Chat chat = new Chatroom();
-    Usuario u1;
-    Usuario u2;
+    String user;
 
-    public InterfazChat() {
+    public InterfazChat(String user) {
+        this.user = user;
         initComponents();
+        mostrarMensajesEnviados();
+        mostrarMensajesRecibidos();
         setLocationRelativeTo(null);
-        u1 = new Usuario1("Usuario 1");
-        u2 = new Usuario1("Usuario 2");
-
-        chat.Registrar(u1);
-        chat.Registrar(u2);
+        cargarComboBox();
+        
+        jLbluser.setText("Usuario: " + user);
 
     }
 
-    private void enviarA2() {
-        chat.Enviar(jTxtUsuario1.getText(), u2, u1);
-        mostrarMensajes();
+    private void enviarMensaje() {
+        String mensaje = jTxtUsuario1.getText();
+        String para = (String) jComboBox1.getSelectedItem();
+        String de = user;
+        chat.Enviar(mensaje, para, de);
+        mostrarMensajesEnviados();
     }
 
 
 
-    private void mostrarMensajes() {
+    private void mostrarMensajesEnviados() {
+        String de = user;
+        List<String> lista = chat.getMensajesRec(user);
         DefaultListModel modelo = new DefaultListModel();
-        for (int i = 0; i < chat.getMensajes().size(); i++) {
-            modelo.addElement(chat.getMensajes().get(i));
+        for (int i = 0; i < lista.size(); i++) {
+            modelo.addElement(lista.get(i));
         }
-        jListMedio.setModel(modelo);
+        jLstEnv.setModel(modelo);
+    }
+    
+    private void mostrarMensajesRecibidos() {
+        List<String> lista = chat.getMensajesEnv(user);
+        DefaultListModel modelo = new DefaultListModel();
+        for (int i = 0; i < lista.size(); i++) {
+            modelo.addElement(lista.get(i));
+        }
+        jListRec.setModel(modelo);
+    }
+    
+    private void cargarComboBox(){
+        ListaPersonas listaPersonas = new ListaPersonas();
+        DefaultComboBoxModel modelo = new DefaultComboBoxModel();
+        List<String> lista = listaPersonas.obtenerUsuarios();
+        for (int i = 0; i < lista.size(); i++) {
+            modelo.addElement(lista.get(i));
+        }
+        modelo.removeElement(user);
+        jComboBox1.setModel(modelo);
     }
 
     @SuppressWarnings("unchecked")
@@ -46,19 +72,22 @@ public class InterfazChat extends javax.swing.JFrame {
         jTxtUsuario1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jListMedio = new javax.swing.JList<>();
+        jListRec = new javax.swing.JList<>();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        jLstEnv = new javax.swing.JList<>();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
+        jBtnSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLbluser.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
         jLbluser.setText("Usuario 1");
 
+        jButton1.setBackground(new java.awt.Color(0, 0, 0));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Enviar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -66,9 +95,9 @@ public class InterfazChat extends javax.swing.JFrame {
             }
         });
 
-        jScrollPane1.setViewportView(jListMedio);
+        jScrollPane1.setViewportView(jListRec);
 
-        jScrollPane4.setViewportView(jList1);
+        jScrollPane4.setViewportView(jLstEnv);
 
         jLabel2.setFont(new java.awt.Font("Montserrat", 0, 18)); // NOI18N
         jLabel2.setText("Mensajes Enviados");
@@ -79,7 +108,14 @@ public class InterfazChat extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Montserrat", 0, 12)); // NOI18N
         jLabel1.setText("Mensaje Para: ");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jBtnSalir.setBackground(new java.awt.Color(0, 0, 0));
+        jBtnSalir.setForeground(new java.awt.Color(255, 255, 255));
+        jBtnSalir.setText("Salir");
+        jBtnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnSalirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -93,10 +129,11 @@ public class InterfazChat extends javax.swing.JFrame {
                             .addComponent(jTxtUsuario1, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLbluser)
-                                    .addComponent(jButton1))
-                                .addGap(0, 177, Short.MAX_VALUE)))
+                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+                                    .addComponent(jBtnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(0, 158, Short.MAX_VALUE)))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 442, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -124,8 +161,10 @@ public class InterfazChat extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jTxtUsuario1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jBtnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -142,9 +181,16 @@ public class InterfazChat extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        enviarA2();
+        enviarMensaje();
+        mostrarMensajesEnviados();
         jTxtUsuario1.setText(null);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jBtnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnSalirActionPerformed
+        Login log = new Login();
+        log.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jBtnSalirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -179,20 +225,21 @@ public class InterfazChat extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new InterfazChat().setVisible(true);
+                new InterfazChat(null).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBtnSalir;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLbluser;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.JList<String> jListMedio;
+    private javax.swing.JList<String> jListRec;
+    private javax.swing.JList<String> jLstEnv;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextField jTxtUsuario1;
