@@ -3,6 +3,8 @@ package Interfaz;
 import PatronMediator.Chat;
 import PatronMediator.Chatroom;
 import PatronSingleton.ListaPersonas;
+import PatronStrategy.Contexto;
+import PatronStrategy.Persona;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -183,11 +185,14 @@ public class InterfazChat extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         enviarMensaje();
         mostrarMensajesEnviados();
+        mostrarMensajesRecibidos();
         jTxtUsuario1.setText(null);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jBtnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnSalirActionPerformed
         Login log = new Login();
+        Contexto contexto = new Contexto(new Persona());
+        contexto.salir();
         log.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jBtnSalirActionPerformed
